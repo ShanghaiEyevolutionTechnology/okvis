@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 2.8.11)
-
 project(okvis)
 # The version number.
 set(OKVIS_MAJOR_VERSION 1)
@@ -84,19 +83,19 @@ find_package( Eigen REQUIRED )
 include_directories(${EIGEN_INCLUDE_DIR}) 
 
 # libvisensor
-find_package(VISensor)
-
-if(VISENSORDRIVER_FOUND)
-  add_definitions(-DHAVE_LIBVISENSOR)
-  set(LIBVISENSOR TRUE)
-  message(STATUS "Found libvisensor. Setting HAVE_LIBVISENSOR flag.")
-  include_directories(${VISensorDriver_INCLUDE_DIR})
-  # install find script
-  install(FILES ${PROJECT_SOURCE_DIR}/cmake/FindVISensor.cmake
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/CMake)
-else()
-  message(STATUS "libvisensor not found")
-endif()
+#find_package(VISensor)
+#
+#if(VISENSORDRIVER_FOUND)
+#  add_definitions(-DHAVE_LIBVISENSOR)
+#  set(LIBVISENSOR TRUE)
+#  message(STATUS "Found libvisensor. Setting HAVE_LIBVISENSOR flag.")
+#  include_directories(${VISensorDriver_INCLUDE_DIR})
+#  # install find script
+#  install(FILES ${PROJECT_SOURCE_DIR}/cmake/FindVISensor.cmake
+#    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/CMake)
+#else()
+#  message(STATUS "libvisensor not found")
+#endif()
 
 
 
@@ -148,7 +147,7 @@ else()
   set(CERES_VERSION 1.9.0)
   set(CERES_TAG 7c57de5080c9f5a4f067e2d20b5f33bad5b1ade6) #version 1.9. Newer ones would need adaptation with ceres::ParameterBlock
   ExternalProject_Add(ceres_external
-    GIT_REPOSITORY https://ceres-solver.googlesource.com/ceres-solver
+    GIT_REPOSITORY https://github.com/ceres-solver/ceres-solver 
     GIT_TAG ${CERES_TAG}
     UPDATE_COMMAND ""
     INSTALL_DIR ${CMAKE_BINARY_DIR}
@@ -235,6 +234,10 @@ set(OpenGV_LIBRARIES opengv)
 set_target_properties(opengv PROPERTIES IMPORTED_LOCATION ${CMAKE_BINARY_DIR}/lib/libopengv.a)
 add_dependencies(${OpenGV_LIBRARIES} opengv_external)
 
+# LeadSense
+find_package(EvoBinoSDK REQUIRED)
+include_directories(${EvoBinoSDK_INCLUDE_DIRS})
+	
 # install it once built
 install(FILES ${CMAKE_BINARY_DIR}/lib/libopengv.a 
   DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
@@ -331,13 +334,31 @@ if(BUILD_APPS)
     pthread 
     ${Boost_LIBRARIES}
   )
-  if(${VISENSORDRIVER_FOUND})
-    target_link_libraries(okvis_app_synchronous ${VISensorDriver_LIBRARY})
-  endif()
-  install(TARGETS okvis_app_synchronous
-    # IMPORTANT: Add the executable to the "export-set"
-    EXPORT okvisTargets
-    RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin)
+  
+ add_executable(okvis_app_leadsense okvis_apps/src/okvis_app_leadsense.cpp)
+  target_link_libraries(okvis_app_leadsense 
+    okvis_util
+    okvis_kinematics
+    okvis_time
+    okvis_cv 
+    okvis_common
+    okvis_ceres
+    okvis_timing
+    okvis_matcher
+    okvis_frontend 
+    okvis_multisensor_processing
+    pthread 
+    ${EvoBinoSDK_LIBRARIES}
+    ${Boost_LIBRARIES}
+  )
+
+ # if(${VISENSORDRIVER_FOUND})
+ #   target_link_libraries(okvis_app_synchronous ${VISensorDriver_LIBRARY})
+ # endif()
+ # install(TARGETS okvis_app_synchronous
+ #   # IMPORTANT: Add the executable to the "export-set"
+ #   EXPORT okvisTargets
+ #   RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin)
 endif()
 
 # installation is invoked in the individual modules...

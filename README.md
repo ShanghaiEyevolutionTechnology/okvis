@@ -1,3 +1,5 @@
+Original readme of okvis is saved in README_origin.md. This project is forked from okvis. We add LeadSense examples.
+
 README                        {#mainpage}
 ======
 
@@ -36,6 +38,11 @@ This is a pure cmake project.
 
 You will need to install the following dependencies,
 
+* EvoBinoSDK,
+
+	- Download the latest version of the EvoBinoSDK on [LeadSense official site](http://leadsense.ilooktech.com/developer).
+	- For more EvoBinoSDK information, read the [Technical Documents](http://leadsense.ilooktech.com/sdk/docs/).
+
 * CMake,
 
         sudo apt-get install cmake
@@ -60,7 +67,7 @@ You will need to install the following dependencies,
 
         sudo apt-get install libboost-dev libboost-filesystem-dev
 
-* OpenCV 2.4-3.0: follow the instructions on http://opencv.org/ or install 
+* OpenCV 2.4-3.4.1: follow the instructions on http://opencv.org/ or install 
   via 
  
         sudo apt-get install libopencv-dev
@@ -115,6 +122,18 @@ In order to run a minimal working example, follow the steps below:
 2. Run the app as
 
         ./okvis_app_synchronous path/to/okvis/config/config_fpga_p2_euroc.yaml path/to/MH_01_easy/mav0/
+        
+### Running the LeadSense demo application ###
+
+1. You can run the LeadSense demo application real-time or with an .evo file. **If CPU speed is not fast enough, real-time performance may be not good. In that case, you could use ImageViewer to save an .evo file with IMU data first, then run this demo application with .evo file.**
+
+2. Check the camera parameter file. Edit `path/to/okvis/config/config_leadsense.yaml`, change `image_dimension`, `focal_length` and `principal_point` with the resolution and **rectified stereo parameters** of your own camera. (Since we are using rectified images, no `distortion_coefficients` is needed.) **Rectified stereo parameters** will be printed at the beginning of this demo application.
+
+Note: You can also change to use Kalibr calibration result if you do calibration by yourself. In that case, make sure to grab images without rectify. `T_SC` can be changed for a more correct value if you do the camera-IMU calibration.
+
+3. Run the app as
+
+        ./okvis_app_leadsense ../config/config_leadsense.yaml [.evo file]
 
 ### Outputs and frames
 
@@ -224,3 +243,6 @@ OKVIS.
 The developpers will be happy to assist you or to consider bug reports / feature 
 requests. But questions that can be answered reading this document will be 
 ignored. Please contact s.leutenegger@imperial.ac.uk.
+
+If you have any questions about the LeadSense demo application, please contact leadsense@ilooktech.com.
+
