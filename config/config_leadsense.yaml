@@ -6,7 +6,7 @@
 cameras:
     - {T_SC:
        [-1, 0, 0, 0.09195, 
-        0, -1, 0, 0.00005,
+        0, -1, 0, -0.00005,
         0, 0, 1, 0.009, 
         0.0, 0.0, 0.0, 1.0],
        image_dimension: [640, 400],
@@ -17,7 +17,7 @@ cameras:
 
     - {T_SC:
        [-1, 0, 0, -0.02805, 
-        0, -1, 0, 0.00005, 
+        0, -1, 0, -0.00005, 
         0, 0, 1, 0.009, 
         0.0, 0.0, 0.0, 1.0],
        image_dimension: [640, 400],
@@ -35,14 +35,14 @@ camera_params:
     timestamp_tolerance: 0.005 # [s] stereo frame out-of-sync tolerance
 
 imu_params:
-    a_max: 156.8 # acceleration saturation [m/s^2] # 16 * g
+   a_max: 156.8 # acceleration saturation [m/s^2] # 16 * g
     g_max: 34.9 # gyro saturation [rad/s] # 2000 * pi / 180
-    sigma_g_c: 0.00888232829671 # gyro noise density [rad/s/sqrt(Hz)]  9.0086e-05  12.0e-4
-    sigma_a_c: 0.0268014618074 # accelerometer noise density [m/s^2/sqrt(Hz)]  7.6509e-02  8.0e-3
+    sigma_g_c: 1.7453e-4 # gyro noise density [rad/s/sqrt(Hz)]
+    sigma_a_c: 2.94e-3 # accelerometer noise density [m/s^2/sqrt(Hz)]
     sigma_bg: 0.03 # gyro bias prior [rad/s]
     sigma_ba: 0.1 # accelerometer bias prior [m/s^2]
-    sigma_gw_c: 0.000379565782927 # gyro drift noise density [rad/s^s/sqrt(Hz)]  5.5379e-05  4.0e-6
-    sigma_aw_c: 0.00262960861593 # accelerometer drift noise density [m/s^2/sqrt(Hz)] 5.3271e-04  4.0e-5 
+    sigma_gw_c: 0.0004 # gyro drift noise density [rad/s^s/sqrt(Hz)]
+    sigma_aw_c: 0.003 # accelerometer drift noise density [m/s^2/sqrt(Hz)] 
     tau: 3600.0 # reversion time constant, currently not in use [s]
     g: 9.8 # Earth's acceleration due to gravity [m/s^2]
     a0: [ 0.0, 0.0, 0.0 ] # Accelerometer bias [m/s^2]
